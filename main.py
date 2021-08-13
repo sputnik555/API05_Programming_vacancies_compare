@@ -53,9 +53,9 @@ def print_table(all_languages_stat, title=''):
     print(table.table)
 
 
-def get_headhinter_stats_dict():
+def get_headhinter_stats_dict(languages):
     all_languages_stat = {}
-    for language in PROGRAMMING_LANGUAGES:
+    for language in languages:
         payload = {
             'text': 'программист {}'.format(language),
             'per_page': 100,
@@ -89,7 +89,7 @@ def get_headhinter_stats_dict():
     return all_languages_stat
 
 
-def get_superjob_stats_dict():
+def get_superjob_stats_dict(languages):
     headers = {'X-Api-App-Id': os.getenv('SUPERJOB_TOKEN')}
 
     payload = {
@@ -101,7 +101,7 @@ def get_superjob_stats_dict():
 
     all_languages_stat = {}
 
-    for language in PROGRAMMING_LANGUAGES:
+    for language in languages:
         lang_stat = {
             'vacancies_processed': 0,
             'average_salary': 0,
@@ -132,5 +132,5 @@ def get_superjob_stats_dict():
 
 if __name__ == "__main__":
     load_dotenv()
-    print_table(get_headhinter_stats_dict(), 'Статистика зарплат HeadHunter')
-    print_table(get_superjob_stats_dict(), 'Статистика зарплат Superjob')
+    print_table(get_headhinter_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат HeadHunter')
+    print_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат Superjob')
