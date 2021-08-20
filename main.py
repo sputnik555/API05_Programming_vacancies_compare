@@ -19,26 +19,22 @@ PROGRAMMING_LANGUAGES = [
 
 
 def predict_rub_salary_hh(vacancy):
-    if vacancy['salary'] is not None and vacancy['salary']['currency'] == 'RUR':
+    if vacancy['salary'] and vacancy['salary']['currency'] == 'RUR':
         return predict_salary(vacancy['salary']['from'], vacancy['salary']['to'])
 
 
 def predict_rub_salary_sj(vacancy):
-    if type(vacancy['currency']) is str and vacancy['currency'] == 'rub':
+    if vacancy['currency'] and vacancy['currency'] == 'rub':
         return predict_salary(vacancy['payment_from'], vacancy['payment_to'])
 
 
 def predict_salary(salary_from, salary_to):
-    if salary_is_filled(salary_from) and salary_is_filled(salary_to):
+    if salary_from and salary_to:
         return salary_from + salary_to / 2
-    elif salary_is_filled(salary_to):
+    elif salary_to:
         return salary_to * 0.8
-    elif salary_is_filled(salary_from):
+    elif salary_from:
         return salary_from * 1.2
-
-
-def salary_is_filled(salary):
-    return type(salary) is int and salary > 0
 
 
 def print_table(all_languages_stat, title=''):
