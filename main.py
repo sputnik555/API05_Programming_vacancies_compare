@@ -106,7 +106,7 @@ def get_superjob_stats_dict(languages):
         page = 0
         salary_total = 0
         more = True
-        while more is True:
+        while more:
             payload['keyword'] = language
             payload['page'] = page
             page += 1
