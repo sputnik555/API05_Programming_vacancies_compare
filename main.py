@@ -68,19 +68,18 @@ def get_headhinter_stats_dict(languages):
         while page < pages_number:
             payload['page'] = page
             response = requests.get('https://api.hh.ru/vacancies', params=payload)
+            response.raise_for_status()
+            pages_number = response.json()['pages']
+            lang_stat['vacancies_found'] = response.json()['found']
 
-            if response.ok:
-                pages_number = response.json()['pages']
-                lang_stat['vacancies_found'] = response.json()['found']
-
-                for vacancy in response.json()['items']:
-                    salary = predict_rub_salary_hh(vacancy)
-                    if salary:
-                        salary_total += salary
-                        lang_stat['vacancies_processed'] += 1
-                if lang_stat['vacancies_processed']:
-                    lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
-                all_languages_stat[language] = lang_stat
+            for vacancy in response.json()['items']:
+                salary = predict_rub_salary_hh(vacancy)
+                if salary:
+                    salary_total += salary
+                    lang_stat['vacancies_processed'] += 1
+            if lang_stat['vacancies_processed']:
+                lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
+            all_languages_stat[language] = lang_stat
             page += 1
     return all_languages_stat
 
@@ -111,6 +110,7 @@ def get_superjob_stats_dict(languages):
             payload['page'] = page
             page += 1
             response = requests.get('https://api.superjob.ru/2.0/vacancies/', headers=headers, params=payload)
+            response.raise_for_status()
             more = response.json()['more']
             lang_stat['vacancies_found'] = response.json()['total']
 
