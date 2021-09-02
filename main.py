@@ -78,7 +78,7 @@ def get_headhinter_stats_dict(languages):
                     if salary:
                         salary_total += salary
                         lang_stat['vacancies_processed'] += 1
-                if lang_stat['vacancies_processed'] > 0:
+                if lang_stat['vacancies_processed']:
                     lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
                 all_languages_stat[language] = lang_stat
             page += 1
@@ -120,7 +120,7 @@ def get_superjob_stats_dict(languages):
                     salary_total += salary
                     lang_stat['vacancies_processed'] += 1
 
-        if lang_stat['vacancies_processed'] > 0:
+        if lang_stat['vacancies_processed']:
             lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
         all_languages_stat[language] = lang_stat
     return all_languages_stat
