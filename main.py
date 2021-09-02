@@ -75,7 +75,7 @@ def get_headhinter_stats_dict(languages):
 
                 for vacancy in response.json()['items']:
                     salary = predict_rub_salary_hh(vacancy)
-                    if salary is not None:
+                    if salary:
                         salary_total += salary
                         lang_stat['vacancies_processed'] += 1
                 if lang_stat['vacancies_processed'] > 0:
@@ -116,7 +116,7 @@ def get_superjob_stats_dict(languages):
 
             for vacancy in response.json()['objects']:
                 salary = predict_rub_salary_sj(vacancy)
-                if salary is not None:
+                if salary:
                     salary_total += salary
                     lang_stat['vacancies_processed'] += 1
 
