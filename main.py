@@ -37,7 +37,7 @@ def predict_salary(salary_from, salary_to):
         return salary_from * 1.2
 
 
-def print_table(all_languages_stat, title=''):
+def get_table(all_languages_stat, title=''):
     table_data = [
         ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']
     ]
@@ -46,7 +46,7 @@ def print_table(all_languages_stat, title=''):
             [lang_name, stats['vacancies_found'], stats['vacancies_processed'], stats['average_salary']]
         )
     table = AsciiTable(table_data, title)
-    print(table.table)
+    return table.table
 
 
 def get_headhinter_stats_dict(languages):
@@ -128,5 +128,5 @@ def get_superjob_stats_dict(languages):
 
 if __name__ == "__main__":
     load_dotenv()
-    print_table(get_headhinter_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат HeadHunter')
-    print_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат Superjob')
+    print(get_table(get_headhinter_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат HeadHunter'))
+    print(get_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат Superjob'))
