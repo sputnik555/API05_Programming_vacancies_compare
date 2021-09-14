@@ -52,36 +52,7 @@ def get_table(all_languages_stat, title=''):
 def get_headhinter_stats_dict(languages):
     all_languages_stat = {}
     for language in languages:
-        payload = {
-            'text': 'программист {}'.format(language),
-            'per_page': 100,
-        }
-        lang_stat = {
-            'vacancies_processed': 0,
-            'average_salary': 0,
-            'vacancies_found': 0,
-        }
-        page = 0
-        pages_number = 1
-        salary_total = 0
-
-        while page < pages_number:
-            payload['page'] = page
-            response = requests.get('https://api.hh.ru/vacancies', params=payload)
-            response.raise_for_status()
-            response_dict = response.json()
-            pages_number = response_dict['pages']
-            lang_stat['vacancies_found'] = response_dict['found']
-
-            for vacancy in response_dict['items']:
-                salary = predict_rub_salary_hh(vacancy)
-                if salary:
-                    salary_total += salary
-                    lang_stat['vacancies_processed'] += 1
-            if lang_stat['vacancies_processed']:
-                lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
-            all_languages_stat[language] = lang_stat
-            page += 1
+        all_languages_stat[language] = get_hh_lang_stat(language)
     return all_languages_stat
 
 
@@ -126,6 +97,39 @@ def get_superjob_stats_dict(languages):
             lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
         all_languages_stat[language] = lang_stat
     return all_languages_stat
+
+
+def get_hh_lang_stat(language):
+    payload = {
+        'text': 'программист {}'.format(language),
+        'per_page': 100,
+    }
+    lang_stat = {
+        'vacancies_processed': 0,
+        'average_salary': 0,
+        'vacancies_found': 0,
+    }
+    page = 0
+    pages_number = 1
+    salary_total = 0
+
+    while page < pages_number:
+        payload['page'] = page
+        response = requests.get('https://api.hh.ru/vacancies', params=payload)
+        response.raise_for_status()
+        response_dict = response.json()
+        pages_number = response_dict['pages']
+        lang_stat['vacancies_found'] = response_dict['found']
+
+        for vacancy in response_dict['items']:
+            salary = predict_rub_salary_hh(vacancy)
+            if salary:
+                salary_total += salary
+                lang_stat['vacancies_processed'] += 1
+        if lang_stat['vacancies_processed']:
+            lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
+        page += 1
+    return lang_stat
 
 
 if __name__ == "__main__":
