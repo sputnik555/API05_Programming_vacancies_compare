@@ -49,7 +49,7 @@ def get_table(all_languages_stat, title=''):
     return table.table
 
 
-def get_headhinter_stats_dict(languages):
+def get_headhunter_stats_dict(languages):
     all_languages_stat = {}
     for language in languages:
         all_languages_stat[language] = get_hh_lang_stat(language)
@@ -139,5 +139,5 @@ def get_sj_lang_stat(language):
 
 if __name__ == "__main__":
     load_dotenv()
-    print(get_table(get_headhinter_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат HeadHunter'))
+    print(get_table(get_headhunter_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат HeadHunter'))
     print(get_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат Superjob'))
