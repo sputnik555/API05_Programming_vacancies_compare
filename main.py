@@ -103,10 +103,13 @@ def get_hh_lang_stat(language):
             if salary:
                 salary_total += salary
                 lang_stat['vacancies_processed'] += 1
+
         if lang_stat['vacancies_processed']:
             lang_stat['average_salary'] = int(salary_total /
                                               lang_stat['vacancies_processed'])
         page += 1
+
+    lang_stat['vacancies_found'] = response['found']
     return lang_stat
 
 
@@ -151,6 +154,7 @@ def get_sj_lang_stat(language, superjob_token):
             lang_stat['average_salary'] = int(salary_total /
                                               lang_stat['vacancies_processed'])
 
+    lang_stat['vacancies_found'] = response['total']
     return lang_stat
 
 
