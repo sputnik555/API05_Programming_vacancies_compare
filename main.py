@@ -20,12 +20,14 @@ PROGRAMMING_LANGUAGES = [
 
 def predict_rub_salary_hh(vacancy):
     if vacancy['salary'] and vacancy['salary']['currency'] == 'RUR':
-        return predict_salary(vacancy['salary']['from'], vacancy['salary']['to'])
+        return predict_salary(vacancy['salary']['from'],
+                              vacancy['salary']['to'])
 
 
 def predict_rub_salary_sj(vacancy):
     if vacancy['currency'] and vacancy['currency'] == 'rub':
-        return predict_salary(vacancy['payment_from'], vacancy['payment_to'])
+        return predict_salary(vacancy['payment_from'],
+                              vacancy['payment_to'])
 
 
 def predict_salary(salary_from, salary_to):
@@ -39,11 +41,21 @@ def predict_salary(salary_from, salary_to):
 
 def get_table(all_languages_stat, title=''):
     table_data = [
-        ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']
+        [
+            'Язык программирования',
+            'Вакансий найдено',
+            'Вакансий обработано',
+            'Средняя зарплата'
+        ]
     ]
     for lang_name, stats in all_languages_stat.items():
         table_data.append(
-            [lang_name, stats['vacancies_found'], stats['vacancies_processed'], stats['average_salary']]
+            [
+                lang_name,
+                stats['vacancies_found'],
+                stats['vacancies_processed'],
+                stats['average_salary']
+            ]
         )
     table = AsciiTable(table_data, title)
     return table.table
@@ -59,7 +71,8 @@ def get_headhunter_stats_dict(languages):
 def get_superjob_stats_dict(languages, superjob_token):
     all_languages_stat = {}
     for language in languages:
-        all_languages_stat[language] = get_sj_lang_stat(language, superjob_token)
+        all_languages_stat[language] = get_sj_lang_stat(language,
+                                                        superjob_token)
     return all_languages_stat
 
 
@@ -91,7 +104,8 @@ def get_hh_lang_stat(language):
                 salary_total += salary
                 lang_stat['vacancies_processed'] += 1
         if lang_stat['vacancies_processed']:
-            lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
+            lang_stat['average_salary'] = int(salary_total /
+                                              lang_stat['vacancies_processed'])
         page += 1
     return lang_stat
 
@@ -119,7 +133,9 @@ def get_sj_lang_stat(language, superjob_token):
         payload['keyword'] = language
         payload['page'] = page
         page += 1
-        response = requests.get('https://api.superjob.ru/2.0/vacancies/', headers=headers, params=payload)
+        response = requests.get('https://api.superjob.ru/2.0/vacancies/',
+                                headers=headers,
+                                params=payload)
         response.raise_for_status()
         response_dict = response.json()
         more = response_dict['more']
@@ -132,7 +148,8 @@ def get_sj_lang_stat(language, superjob_token):
                 lang_stat['vacancies_processed'] += 1
 
         if lang_stat['vacancies_processed']:
-            lang_stat['average_salary'] = int(salary_total / lang_stat['vacancies_processed'])
+            lang_stat['average_salary'] = int(salary_total /
+                                              lang_stat['vacancies_processed'])
 
     return lang_stat
 
@@ -140,5 +157,7 @@ def get_sj_lang_stat(language, superjob_token):
 if __name__ == "__main__":
     load_dotenv()
     superjob_token = os.getenv('SUPERJOB_TOKEN')
-    print(get_table(get_headhunter_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат HeadHunter'))
-    print(get_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES, superjob_token), 'Статистика зарплат Superjob'))
+    print(get_table(get_headhunter_stats_dict(PROGRAMMING_LANGUAGES),
+                    'Статистика зарплат HeadHunter'))
+    print(get_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES, superjob_token),
+                    'Статистика зарплат Superjob'))
