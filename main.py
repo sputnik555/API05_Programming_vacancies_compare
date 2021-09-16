@@ -56,10 +56,10 @@ def get_headhunter_stats_dict(languages):
     return all_languages_stat
 
 
-def get_superjob_stats_dict(languages):
+def get_superjob_stats_dict(languages, superjob_token):
     all_languages_stat = {}
     for language in languages:
-        all_languages_stat[language] = get_sj_lang_stat(language)
+        all_languages_stat[language] = get_sj_lang_stat(language, superjob_token)
     return all_languages_stat
 
 
@@ -96,8 +96,8 @@ def get_hh_lang_stat(language):
     return lang_stat
 
 
-def get_sj_lang_stat(language):
-    headers = {'X-Api-App-Id': os.getenv('SUPERJOB_TOKEN')}
+def get_sj_lang_stat(language, superjob_token):
+    headers = {'X-Api-App-Id': superjob_token}
 
     payload = {
         'town': 4,
@@ -139,5 +139,6 @@ def get_sj_lang_stat(language):
 
 if __name__ == "__main__":
     load_dotenv()
+    superjob_token = os.getenv('SUPERJOB_TOKEN')
     print(get_table(get_headhunter_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат HeadHunter'))
-    print(get_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES), 'Статистика зарплат Superjob'))
+    print(get_table(get_superjob_stats_dict(PROGRAMMING_LANGUAGES, superjob_token), 'Статистика зарплат Superjob'))
