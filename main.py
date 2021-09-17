@@ -16,6 +16,8 @@ PROGRAMMING_LANGUAGES = [
     'Swift',
     'Go'
 ]
+SJ_MOSCOW_CODE = 4
+SJ_IT_CODE = 48
 
 
 def predict_rub_salary_hh(vacancy):
@@ -117,8 +119,8 @@ def get_sj_lang_stat(language, superjob_token):
     headers = {'X-Api-App-Id': superjob_token}
 
     payload = {
-        'town': 4,
-        'catalogues': 48,
+        'town': SJ_MOSCOW_CODE,
+        'catalogues': SJ_IT_CODE,
         'count': 100,
         'page': 0
     }
