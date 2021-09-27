@@ -66,15 +66,24 @@ def get_table(all_languages_stat, title=''):
 def get_headhunter_stats(languages):
     all_languages_stat = {}
     for language in languages:
-        all_languages_stat[language] = get_hh_lang_stat(language)
+        lang_stat = get_hh_lang_stat(language)
+        all_languages_stat[language] = {
+            'vacancies_processed': lang_stat[0],
+            'average_salary': lang_stat[1],
+            'vacancies_found': lang_stat[2]
+        }
     return all_languages_stat
 
 
 def get_superjob_stats(languages, superjob_token):
     all_languages_stat = {}
     for language in languages:
-        all_languages_stat[language] = get_sj_lang_stat(language,
-                                                        superjob_token)
+        lang_stats = get_sj_lang_stat(language, superjob_token)
+        all_languages_stat[language] = {
+            'vacancies_processed': lang_stats[0],
+            'average_salary': lang_stats[1],
+            'vacancies_found': lang_stats[2]
+        }
     return all_languages_stat
 
 
@@ -83,11 +92,8 @@ def get_hh_lang_stat(language):
         'text': 'программист {}'.format(language),
         'per_page': 100,
     }
-    lang_stat = {
-        'vacancies_processed': 0,
-        'average_salary': 0,
-        'vacancies_found': 0,
-    }
+
+    vacancies_processed = 0
     page = 0
     pages_number = 1
     salary_total = 0
@@ -98,21 +104,19 @@ def get_hh_lang_stat(language):
         response.raise_for_status()
         response = response.json()
         pages_number = response['pages']
-        lang_stat['vacancies_found'] = response['found']
 
         for vacancy in response['items']:
             salary = predict_rub_salary_hh(vacancy)
             if salary:
                 salary_total += salary
-                lang_stat['vacancies_processed'] += 1
+                vacancies_processed += 1
 
-        if lang_stat['vacancies_processed']:
-            lang_stat['average_salary'] = int(salary_total /
-                                              lang_stat['vacancies_processed'])
+        if vacancies_processed:
+            average_salary = int(salary_total / vacancies_processed)
         page += 1
 
-    lang_stat['vacancies_found'] = response['found']
-    return lang_stat
+    vacancies_found = response['found']
+    return vacancies_processed, average_salary, vacancies_found
 
 
 def get_sj_lang_stat(language, superjob_token):
@@ -122,20 +126,16 @@ def get_sj_lang_stat(language, superjob_token):
         'town': SJ_MOSCOW_CODE,
         'catalogues': SJ_IT_CODE,
         'count': 100,
-        'page': 0
+        'keyword': language
     }
 
-    lang_stat = {
-        'vacancies_processed': 0,
-        'average_salary': 0,
-        'vacancies_found': 0
-    }
+    vacancies_processed = 0
+    average_salary = 0
 
     page = 0
     salary_total = 0
     more = True
     while more:
-        payload['keyword'] = language
         payload['page'] = page
         page += 1
         response = requests.get('https://api.superjob.ru/2.0/vacancies/',
@@ -144,20 +144,18 @@ def get_sj_lang_stat(language, superjob_token):
         response.raise_for_status()
         response = response.json()
         more = response['more']
-        lang_stat['vacancies_found'] = response['total']
 
         for vacancy in response['objects']:
             salary = predict_rub_salary_sj(vacancy)
             if salary:
                 salary_total += salary
-                lang_stat['vacancies_processed'] += 1
+                vacancies_processed += 1
 
-        if lang_stat['vacancies_processed']:
-            lang_stat['average_salary'] = int(salary_total /
-                                              lang_stat['vacancies_processed'])
+    if vacancies_processed:
+        average_salary = int(salary_total / vacancies_processed)
 
-    lang_stat['vacancies_found'] = response['total']
-    return lang_stat
+    vacancies_found = response['total']
+    return vacancies_processed, average_salary, vacancies_found
 
 
 if __name__ == "__main__":
