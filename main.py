@@ -158,7 +158,7 @@ def get_sj_lang_stat(language, superjob_token):
     return vacancies_processed, average_salary, vacancies_found
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     load_dotenv()
     superjob_token = os.getenv('SUPERJOB_TOKEN')
     print(get_table(get_headhunter_stats(PROGRAMMING_LANGUAGES),
