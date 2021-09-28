@@ -97,6 +97,7 @@ def get_hh_lang_stat(language):
     page = 0
     pages_number = 1
     salary_total = 0
+    average_salary = 0
 
     while page < pages_number:
         payload['page'] = page
@@ -110,10 +111,10 @@ def get_hh_lang_stat(language):
             if salary:
                 salary_total += salary
                 vacancies_processed += 1
-
-        if vacancies_processed:
-            average_salary = int(salary_total / vacancies_processed)
         page += 1
+
+    if vacancies_processed:
+        average_salary = int(salary_total / vacancies_processed)
 
     vacancies_found = response['found']
     return vacancies_processed, average_salary, vacancies_found
