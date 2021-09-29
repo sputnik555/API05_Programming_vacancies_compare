@@ -66,11 +66,12 @@ def get_table(all_languages_stat, title=''):
 def get_headhunter_stats(languages):
     all_languages_stat = {}
     for language in languages:
-        lang_stat = iter(get_hh_lang_stat(language))
+        vacancies_processed, average_salary, vacancies_found = get_hh_lang_stat(
+            language)
         all_languages_stat[language] = {
-            'vacancies_processed': next(lang_stat),
-            'average_salary': next(lang_stat),
-            'vacancies_found': next(lang_stat)
+            'vacancies_processed': vacancies_processed,
+            'average_salary': average_salary,
+            'vacancies_found': vacancies_found
         }
     return all_languages_stat
 
@@ -78,11 +79,12 @@ def get_headhunter_stats(languages):
 def get_superjob_stats(languages, superjob_token):
     all_languages_stat = {}
     for language in languages:
-        lang_stats = iter(get_sj_lang_stat(language, superjob_token))
+        vacancies_processed, average_salary, vacancies_found = get_sj_lang_stat(
+            language, superjob_token)
         all_languages_stat[language] = {
-            'vacancies_processed': next(lang_stats),
-            'average_salary': next(lang_stats),
-            'vacancies_found': next(lang_stats)
+            'vacancies_processed': vacancies_processed,
+            'average_salary': average_salary,
+            'vacancies_found': vacancies_found
         }
     return all_languages_stat
 
